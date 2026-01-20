@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PiSoc Penalty Shootout</title>
+<style>
+    body {
+        background: #111;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 20px;
+    }
+
+    h1 {
+        color: darkgreen;
+    }
+
+    #game {
+        width: 500px;
+        height: 300px;
+        margin: 20px auto;
+        background: green;
+        border: 4px solid white;
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #goalkeeper {
+        width: 80px;
+        height: 20px;
+        background: yellow;
+        position: absolute;
+        top: 20px;
+        left: 210px;
+        border-radius: 5px;
+        transition: left 0.2s;
+    }
+
+    #ball {
+        width: 25px;
+        height: 25px;
+        background: white;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 20px;
+        left: 240px;
+        cursor: pointer;
+    }
+
+    #aim {
+        width: 10px;
+        height: 10px;
+        background: red;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 80px;
+        left: 245px;
+    }
+
+    #message {
+        margin-top: 15px;
+        font-size: 20px;
+    }
+
+    /* Scoreboard */
+    #scoreboard {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .score-dot {
+        width: 20px;
+        height: 20px;
+        background: grey;
+        border-radius: 50%;
+    }
+
+    .goal {
+        background: lime;
+    }
+
+    .save {
+        background: red;
+    }
+</style>
+</head>
+<body>
+
+<h1>PiSoc Penalty Shootout</h1>
+<p>Move aim with A/D or ←/→ — Press SPACE or click ball to shoot</p>
+
+<div id="game">
+    <div id="goalkeeper"></div>
+    <div id="aim"></div>
+    <div id="ball"></div>
+</div>
+
+<div id="scoreboard">
+    <div class="score-dot" id="dot0"></div>
+    <div class="score-dot" id="dot1"></div>
+    <div class="score-dot" id="dot2"></div>
+    <div class="score-dot" id="dot3"></div>
+    <div class="score-dot" id="dot4"></div>
+</div>
+
+<div id="message"></div>
+
+<script>
+    const goalkeeper = document.getElementById("goalkeeper");
+    const ball = document.getElementById("ball");
+    const aim = document.getElementById("aim");
+    const message = document.getElementById("message");
+
+    let aimPos = 245;
+    const aimSpeed = 10;
+
+    let shotCount = 0;
+
+    // Move aim left/right
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+            aimPos = Math.max(10, aimPos - aimSpeed);
+        }
+        if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+            aimPos = Math.min(480, aimPos + aimSpeed);
+        }
+        aim.style.left = aimPos + "px";
+
+        if (e.key === " ") {
+            shoot();
+        }
+    });
+
+    ball.addEventListener("click", shoot);
+
+    function resetScoreboard() {
+        for (let i = 0; i < 5; i++) {
+            const dot = document.getElementById("dot" + i);
+            dot.className = "score-dot";
+        }
+        shotCount = 0;
+    }
+
+    function shoot() {
+        // If 5 shots already taken, reset on next shot
+        if (shotCount >= 5) {
+            resetScoreboard();
+        }
+
+        // Random goalkeeper movement
+        const keeperPos = Math.floor(Math.random() * 350);
+        goalkeeper.style.left = keeperPos + "px";
+
+        // Animate ball
+        ball.style.transition = "1s";
+        ball.style.bottom = "250px";
+        ball.style.left = aimPos + "px";
+
+        setTimeout(() => {
+            const dot = document.getElementById("dot" + shotCount);
+
+            if (Math.abs(aimPos - keeperPos) < 60) {
+                message.textContent = "Saved! 🧤";
+                message.style.color = "yellow";
+                dot.classList.add("save");
+            } else {
+                message.textContent = "GOAL! ⚽🔥";
+                message.style.color = "lime";
+                dot.classList.add("goal");
+            }
+
+            shotCount++;
+
+            // Reset ball + aim
+            setTimeout(() => {
+                ball.style.transition = "0s";
+                ball.style.bottom = "20px";
+                ball.style.left = "240px";
+
+                aimPos = 245;
+                aim.style.left = aimPos + "px";
+            }, 800);
+
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>

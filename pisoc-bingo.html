@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PiSoc Bingo</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: green; /* PiSoc green */
+        color: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    h1 {
+        color: black;
+        margin-bottom: 20px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 150px);
+        gap: 12px;
+    }
+
+    .cell {
+        background: green;
+        border: 2px solid white;
+        color: black;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cell img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+
+    .cell.active {
+        background: darkolivegreen;
+        transform: scale(1.05);
+    }
+</style>
+</head>
+<body>
+
+<h1>PiSoc Bingo</h1>
+
+<div class="grid">
+    <div class="cell" data-id="0">
+    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d" alt="PiSoc logo">
+    Joined PiSoc
+</div>
+
+<div class="cell" data-id="1">
+    <img src="https://i.postimg.cc/7ZfFPBhy/minigame.jpg" alt="Played a Mini Game">
+    Played a Mini Game
+</div>
+
+<div class="cell" data-id="2">
+    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" alt="Met an Exec Member">
+    Met an Exec Member
+</div>
+<div class="cell" data-id="3">
+    <img src="https://i.postimg.cc/Nj53GNFG/Instagram-icon.png" alt="Instagram logo">
+    Followed PiSoc on IG
+</div>
+
+<div class="cell" data-id="4">
+    <img src="https://i.postimg.cc/W1hBp9zj/gaming-win-moment.avif" alt="Beat an Exec Member">
+    Beat an Exec Member
+</div>
+
+<div class="cell" data-id="5">
+    <img src="https://i.postimg.cc/WbWRvRN4/joining-event.webp" alt="Attended an Event">
+    Attended an Event
+</div>
+
+<div class="cell" data-id="6">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Guessed a Programming Language">
+    Guessed a Programming Language
+</div>
+
+<div class="cell" data-id="7">
+    <img src="https://i.postimg.cc/3xdsrLNT/discord.png" alt="Discord logo">
+    Signed Up for Discord
+</div>
+
+<div class="cell" data-id="8">
+    <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d" alt="Joined a PiSoc Event">
+    Joined a PiSoc Event
+</div>
+
+<div class="cell" data-id="9">
+    <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" alt="Free Space">
+    FREE SPACE
+</div>
+
+<div class="cell" data-id="10">
+    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d" alt="Shared an Idea">
+    Shared an Idea
+</div>
+
+<div class="cell" data-id="11">
+    <img src="https://i.postimg.cc/L6Cdpd95/coding-challenge.png" alt="Tried a Coding Challenge">
+    Tried a Coding Challenge
+</div>
+
+<div class="cell" data-id="12">
+    <img src="https://i.postimg.cc/5N7cVc40/meeting-someone-new.png" alt="Met Someone New">
+    Met Someone New
+</div>
+
+<div class="cell" data-id="13">
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c" alt="Tried a Web App">
+    Tried a Web App
+</div>
+
+<div class="cell" data-id="14">
+    <img src="https://i.postimg.cc/4NLCgCfx/took-a-photo.webp" alt="Took a Photo">
+    Took a Photo
+</div>
+
+<div class="cell" data-id="15">
+    <img src="https://i.postimg.cc/vHqRsRYQ/pisoc-github.png" alt="Visited Our GitHub">
+    Visited Our GitHub
+</div>
+    
+</div>
+</div>
+
+<script>
+    const cells = document.querySelectorAll('.cell');
+
+    // Load saved state
+    const saved = JSON.parse(localStorage.getItem("pisocBingo")) || [];
+
+    cells.forEach(cell => {
+        const id = cell.getAttribute("data-id");
+
+        // Restore saved active cells
+        if (saved.includes(id)) {
+            cell.classList.add("active");
+        }
+
+        // Toggle + save
+        cell.addEventListener("click", () => {
+            cell.classList.toggle("active");
+
+            let updated = Array.from(document.querySelectorAll('.cell.active'))
+                               .map(c => c.getAttribute("data-id"));
+
+            localStorage.setItem("pisocBingo", JSON.stringify(updated));
+        });
+    });
+</script>
+
+</body>
+</html>
